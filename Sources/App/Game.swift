@@ -13,7 +13,6 @@ typealias Letter = String
 
 let wordLength = 5
 
-//"/Users/waldrumpus/Downloads/code/Wharrgarbl/Wharrgarbl/words.txt"
 func runWharrgarbl(wordsFile: String, cheatMode: Bool) {
     let words = try! String(contentsOfFile: wordsFile).split(separator: "\n").map {String($0)}
     var state = State()
