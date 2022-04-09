@@ -8,6 +8,7 @@ struct WhaRequest: Codable, Content {
 struct WhaResponse: Codable, Content {
     let hiddenWord: String
     let state: State
+    let error: String?
 }
 
 struct WhaError: Error {
@@ -24,11 +25,19 @@ func routes(_ app: Application) throws {
         
     app.post { req -> WhaResponse in
         let request = try req.content.decode(WhaRequest.self)
+        
+        // guess must be in word list
+        guard words.contains(request.guess) else {
+            return WhaResponse(hiddenWord: "ABCDE", state: State(), error: "I don't know that word, please choose another")
+        }
+        
         var state = request.state ?? State()
+        
         guard let result = state.chooseWord(matching: request.guess, from: words) else {
             throw WhaError(message: "could not find a word")
         }
-        let response = WhaResponse(hiddenWord: result.word, state: state)
+        
+        let response = WhaResponse(hiddenWord: result.word, state: state, error: nil)
 
         return response
     }
