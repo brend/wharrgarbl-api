@@ -7,6 +7,10 @@
 
 import Foundation
 
+struct GameOptions {
+    let randomize: Bool
+}
+
 struct State: Codable {
     var hints: [Letter: Hint] = [:]
     
@@ -81,8 +85,17 @@ struct State: Codable {
         }
     }
     
-    mutating func chooseWord(matching guess: String, from words: [String]) -> SearchResult? {
-        let words = pruneWords(words: words)
+    mutating func chooseWord(
+        matching guess: String,
+        from words: [String],
+        options: GameOptions) -> SearchResult?
+    {
+        var words = pruneWords(words: words)
+        
+        if options.randomize {
+            words.shuffle()
+        }
+        
         let wordScores = Dictionary(grouping: words) {
             self.score($0, guess: guess)
         }

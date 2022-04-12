@@ -14,6 +14,7 @@ typealias Letter = String
 let wordLength = 5
 
 func runWharrgarbl(wordsFile: String, cheatMode: Bool) {
+    let options = GameOptions(randomize: true)
     let words = try! String(contentsOfFile: wordsFile).split(separator: "\n").map {String($0)}
     var state = State()
     var lastWord = "undefined"
@@ -41,7 +42,10 @@ func runWharrgarbl(wordsFile: String, cheatMode: Bool) {
             continue
         }
         
-        if let searchResult = state.chooseWord(matching: guess, from: words) {
+        if let searchResult = state.chooseWord(matching: guess,
+                                               from: words,
+                                               options: options)
+        {
             
             guard searchResult.word != guess else {
                 print("Congratulations! You found the word.")
