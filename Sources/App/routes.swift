@@ -21,7 +21,7 @@ typealias Language = String
 
 let defaultLanguage = "en"
 
-var words: [Language: [String]] = [:]
+var langWords: [Language: [String]] = [:]
 
 func loadWordLists(from resourceDirectory: String) {
     let path = URL(fileURLWithPath: resourceDirectory)
@@ -29,7 +29,7 @@ func loadWordLists(from resourceDirectory: String) {
     for lang in ["en", "de"] {
         let langPath = path.appendingPathComponent("words_\(lang).txt").path
         
-        words[lang] = try? String(contentsOfFile: langPath).split(separator: "\n").map {String($0)}
+        langWords[lang] = try? String(contentsOfFile: langPath).split(separator: "\n").map {String($0)}
     }
 }
 
@@ -41,7 +41,7 @@ func routes(_ app: Application) throws {
         let request = try req.content.decode(WhaRequest.self)
         let options = GameOptions(randomize: true)
         let lang = request.lang ?? defaultLanguage
-        let words = words[lang]!
+        let words = langWords[lang]!
         
         // guess must be in word list
         guard words.contains(request.guess) else {
